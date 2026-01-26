@@ -564,6 +564,29 @@ unsigned int SOIL_load_OGL_texture_array_from_atlas_grid(
     unsigned int reuse_texture_ID,
     unsigned int flags
 );
+/**
+    Loads an image atlas from RAM and splits it into a 2D texture array.
+    Divides a single image file into a grid of smaller images and uploads them as individual
+    layers in a GL_TEXTURE_2D_ARRAY texture, ideal for sprite sheets and tile atlases.
+
+    \param buffer the image data in RAM just as if it were still in a file
+    \param buffer_length the size of the buffer in bytes
+    \param cols number of columns in the atlas grid
+    \param rows number of rows in the atlas grid
+    \param force_channels 0-image format, 1-luminous, 2-luminous/alpha, 3-RGB, 4-RGBA
+    \param reuse_texture_ID 0-generate a new texture ID, otherwise reuse the texture ID (overwriting the old texture)
+    \param flags can be any of SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_MIPMAPS | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT
+    \return 0-failed, otherwise returns the OpenGL texture array handle
+**/
+unsigned int SOIL_load_OGL_texture_array_from_atlas_grid_from_memory(
+	const unsigned char *const buffer,
+	int buffer_length,
+    int cols,
+    int rows,
+    int force_channels,
+    unsigned int reuse_texture_ID,
+    unsigned int flags
+);
 
 /**
     Prepares an image array for GPU upload by applying transformations.

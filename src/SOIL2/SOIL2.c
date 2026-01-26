@@ -860,6 +860,70 @@ unsigned int SOIL_load_OGL_texture_array_from_atlas_grid(
 	return tex_id;
 }
 
+unsigned int SOIL_load_OGL_texture_array_from_atlas_grid_from_memory(
+	const unsigned char *const buffer,
+	int buffer_length,
+	int cols,
+	int rows,
+	int force_channels,
+	unsigned int reuse_texture_ID,
+	unsigned int flags
+){
+	if (query_teximage3d_capability() != SOIL_CAPABILITY_PRESENT)
+	{
+		result_string_pointer = "Texture arrays not supported by OpenGL driver";
+		return 0;
+	}
+
+	unsigned char* atlasData = NULL;
+	int atlasW = 0, atlasH = 0, channels = 0;
+	unsigned int tex_id = 0;
+
+	atlasData = SOIL_load_image_from_memory(buffer, buffer_length, &atlasW, &atlasH, &channels, force_channels);
+
+	if (!atlasData)
+	{
+		result_string_pointer = stbi_failure_reason();
+		return 0;
+	}
+
+	if (force_channels >= 1 && force_channels <= 4){
+		channels = force_channels;
+	}
+
+	SOIL_ImageArray imgArray = extract_image_array_from_atlas_grid(
+		atlasData,
+		atlasW,
+		atlasH,
+		cols,
+		rows,
+		channels
+	);
+
+	if (!imgArray.data || imgArray.layers == 0) {
+		result_string_pointer = "Failed to extract image array from atlas";
+		SOIL_free_image_data(atlasData);
+		return 0;
+	}
+
+	SOIL_free_image_data(atlasData);
+
+	if (!SOIL_prepare_image_array(&imgArray, flags)) {
+		SOIL_image_array_free(&imgArray);
+		return 0;
+	}
+
+	tex_id = SOIL_upload_image_array_to_gl(
+		&imgArray,
+		reuse_texture_ID,
+		flags
+	);
+
+	SOIL_image_array_free(&imgArray);
+
+	return tex_id;
+}
+
 int SOIL_prepare_image_array(
 	SOIL_ImageArray* imgArray,
 	unsigned int flags
