@@ -28,10 +28,12 @@ add_library(soil2
     "${CMAKE_CURRENT_SOURCE_DIR}/src/SOIL2/image_array.h"
 )
 
-target_compile_options(soil2 PRIVATE
-    $<$<CXX_COMPILER_ID:Clang>:-fPIC>
-    $<$<CXX_COMPILER_ID:GNU>:-fPIC>
-)
+if (NOT WIN32)
+    target_compile_options(soil2 PRIVATE
+        $<$<CXX_COMPILER_ID:Clang>:-fPIC>
+        $<$<CXX_COMPILER_ID:GNU>:-fPIC>
+    )
+endif()
 
 target_include_directories(soil2 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/SOIL2/>
