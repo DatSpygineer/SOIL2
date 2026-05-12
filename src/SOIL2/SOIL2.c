@@ -902,11 +902,11 @@ unsigned int SOIL_load_OGL_texture_array_from_atlas_grid_from_memory(
 
 	if (!imgArray.data || imgArray.layers == 0) {
 		result_string_pointer = "Failed to extract image array from atlas";
-		SOIL_free_image_data(atlasData);
+		free(atlasData);
 		return 0;
 	}
 
-	SOIL_free_image_data(atlasData);
+	free(atlasData);
 
 	if (!SOIL_prepare_image_array(&imgArray, flags)) {
 		SOIL_image_array_free(&imgArray);

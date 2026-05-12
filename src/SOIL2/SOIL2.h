@@ -477,11 +477,7 @@ SOIL_write_image_to_memory
 	present mostly so C++ programmers don't forget to use "free()" and call
 	"delete []" instead [8^)
 **/
-void
-	SOIL_free_image_data
-	(
-		unsigned char *img_data
-);
+#define SOIL_free_image_data(img_data) free(img_data)
 
 /**
     Selects the appropriate OpenGL texture formats based on the number of channels and flags.
